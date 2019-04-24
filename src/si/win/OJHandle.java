@@ -97,7 +97,7 @@ public class OJHandle extends JFrame {
 				ratio1.setText(setNumberFomat(ratio1.getText()));
 			}
 		});
-		ratio1.setText("1000000");
+		ratio1.setText("1,000,000");
 		ratio1.setBounds(90, 7, 146, 30);
 		panel_2.add(ratio1);
 		ratio1.setFont(new Font("굴림", Font.PLAIN, 20));
@@ -134,19 +134,19 @@ public class OJHandle extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int kCode = e.getKeyCode();
-				switch (kCode) {
-				case 10:
+//				System.out.println("keyCode : "+kCode);
+				String numberText = getPureNumber(itemVal.getText());
+				itemVal.setText(numberText);
+				if(kCode == 10)
+				{
 					//엔터키 이벤트 실행
 					calculation();
-					break;
-
-				default:
+				} else if(kCode >= 48 && kCode <= 57) {
 					//천단위구분
-					itemVal.setText(setNumberFomat(itemVal.getText()));
-					break;
+					itemVal.setText(setNumberFomat(numberText));
 				}
-				
 			}
+
 		});
 		itemVal.setFont(new Font("굴림", Font.PLAIN, 20));
 		itemVal.setColumns(19);
@@ -206,9 +206,9 @@ public class OJHandle extends JFrame {
 	//계산하기
 	public void calculation()
 	{
-		int tVal = Integer.parseInt(itemVal.getText().replaceAll(",", ""));
-		int bVal = Integer.parseInt(ratio2.getText().replaceAll(",", ""));
-		int fVal = Integer.parseInt(ratio1.getText().replaceAll(",", ""));
+		int tVal = Integer.parseInt(getPureNumber(itemVal.getText()));
+		int bVal = Integer.parseInt(getPureNumber(ratio2.getText()));
+		int fVal = Integer.parseInt(getPureNumber(ratio1.getText()));
 		
 		long rtnVal = (tVal/fVal)*bVal;
 		System.out.println("(거래소금액 )"+tVal+" * (단가)"+bVal+" / (비율)"+fVal+" = (입금액 )"+rtnVal);
@@ -216,14 +216,29 @@ public class OJHandle extends JFrame {
 		rtnValue.setText(setNumberFomat(String.valueOf(rtnVal)));
 	}
 	
+	//천단위구분기호
 	public String setNumberFomat(String s)
 	{
 		if(!s.isEmpty())
 		{
-			s = s.replaceAll(",", "");
-			long r = Integer.parseInt(s);
+			s = s.replaceAll("[^0-9]", "");
+			long r = Long.parseLong(s);
 			s = String.valueOf(formatter.format(r));
 		}
 		return s;
+	}
+	
+	// 숫자인지 확인
+	public boolean isNumber(String str)
+	{
+		return str.matches("^[a-zA-Z0-9]*$");
+	}
+	
+	/*
+	 * 숫자를제외한 모든 문자 삭제
+	 * return : String
+	 * */
+	public String getPureNumber(String text) {
+		return text.replaceAll("[^0-9]", "");
 	}
 }
