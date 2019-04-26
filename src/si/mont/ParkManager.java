@@ -6,6 +6,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.SwingConstants;
+import java.awt.FlowLayout;
+import javax.swing.JList;
 
 public class ParkManager extends JFrame {
 
@@ -34,14 +38,23 @@ public class ParkManager extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.NORTH);
+		JPanel btnPanel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) btnPanel.getLayout();
+		flowLayout.setAlignment(FlowLayout.RIGHT);
+		contentPane.add(btnPanel, BorderLayout.NORTH);
+		
+		JButton button = new JButton("새로고침");
+		btnPanel.add(button);
 		
 		JLabel lblNewLabel = new JLabel("");
-		panel.add(lblNewLabel);
+		btnPanel.add(lblNewLabel);
 		
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.CENTER);
+		JPanel listPanel = new JPanel();
+		contentPane.add(listPanel, BorderLayout.CENTER);
+		
+		JList list = new JList();
+		list.setVisibleRowCount(20);
+		listPanel.add(list);
 	}
 
 }
