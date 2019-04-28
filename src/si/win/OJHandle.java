@@ -15,6 +15,7 @@ import java.text.DecimalFormat;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -93,8 +94,18 @@ public class OJHandle extends JFrame {
 		ratio1.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				//천단위구분
-				ratio1.setText(setNumberFomat(ratio1.getText()));
+				int kCode = e.getKeyCode();
+//				System.out.println("keyCode : "+kCode);
+				String numberText = getPureNumber(ratio1.getText());
+				ratio1.setText(setNumberFomat(numberText));
+				if(kCode == 10)
+				{
+					//엔터키 이벤트 실행
+					calculation();
+				} else if((kCode >= 48 && kCode <= 57) || (kCode >= 96 && kCode <= 105)) {
+					//천단위구분
+					ratio1.setText(setNumberFomat(numberText));
+				}
 			}
 		});
 		ratio1.setText("1,000,000");
@@ -107,8 +118,19 @@ public class OJHandle extends JFrame {
 		ratio2.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				//천단위구분
-				ratio2.setText(setNumberFomat(ratio2.getText()));
+				int kCode = e.getKeyCode();
+//				System.out.println("keyCode : "+kCode);
+				String numberText = getPureNumber(ratio2.getText());
+				ratio2.setText(setNumberFomat(numberText));
+				if(kCode == 10)
+				{
+					//엔터키 이벤트 실행
+					calculation();
+					
+				} else if((kCode >= 48 && kCode <= 57) || (kCode >= 96 && kCode <= 105)) {
+					//천단위구분
+					ratio2.setText(setNumberFomat(numberText));
+				}
 			}
 		});
 		ratio2.setText("500");
@@ -136,12 +158,17 @@ public class OJHandle extends JFrame {
 				int kCode = e.getKeyCode();
 //				System.out.println("keyCode : "+kCode);
 				String numberText = getPureNumber(itemVal.getText());
-				itemVal.setText(numberText);
+				itemVal.setText(setNumberFomat(numberText));
+				if(numberText.length() > 10)
+				{
+					showDialog();
+				}
+				
 				if(kCode == 10)
 				{
 					//엔터키 이벤트 실행
 					calculation();
-				} else if(kCode >= 48 && kCode <= 57) {
+				} else if((kCode >= 48 && kCode <= 57) || (kCode >= 96 && kCode <= 105)) {
 					//천단위구분
 					itemVal.setText(setNumberFomat(numberText));
 				}
@@ -240,5 +267,10 @@ public class OJHandle extends JFrame {
 	 * */
 	public String getPureNumber(String text) {
 		return text.replaceAll("[^0-9]", "");
+	}
+	
+	public void showDialog()
+	{
+		JOptionPane.showMessageDialog(null, "화면에 출력할 메세지", "제목", JOptionPane.WARNING_MESSAGE);
 	}
 }

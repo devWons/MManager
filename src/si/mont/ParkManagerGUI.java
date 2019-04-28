@@ -5,22 +5,28 @@ import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.FlowLayout;
 import javax.swing.JList;
+import javax.swing.JTable;
 
-public class ParkManager extends JFrame {
+public class ParkManagerGUI extends JFrame {
 
 	private JPanel contentPane;
+	private DefaultTableModel model;
+	
+	private String[] colHeader = {"입차시간","차량번호"};
+	
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			ParkManager frame = new ParkManager();
+			ParkManagerGUI frame = new ParkManagerGUI();
 			frame.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -30,7 +36,7 @@ public class ParkManager extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ParkManager() {
+	public ParkManagerGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -52,9 +58,9 @@ public class ParkManager extends JFrame {
 		JPanel listPanel = new JPanel();
 		contentPane.add(listPanel, BorderLayout.CENTER);
 		
-		JList list = new JList();
-		list.setVisibleRowCount(20);
-		listPanel.add(list);
+		
+		model = new DefaultTableModel(colHeader, 0);
+		
 	}
 
 }
