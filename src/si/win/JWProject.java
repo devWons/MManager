@@ -1,19 +1,16 @@
 package si.win;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.Dimension;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
+import javax.swing.JTree;
+import javax.swing.UIManager;
 
 public class JWProject extends JFrame {
 
@@ -25,93 +22,39 @@ public class JWProject extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					JWProject frame = new JWProject();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public JWProject() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 448, 488);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);
-		
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		
-		JTextArea logArea = new JTextArea();
-		logArea.setEditable(false);
-		logArea.setRows(4);
-		logArea.setColumns(50);
-		logArea.setTabSize(10);
-		panel.add(logArea);
-		
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.CENTER);
-		
-		JPanel panel_2 = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
-		flowLayout.setVgap(10);
-		panel_1.add(panel_2);
-		
-		JTextArea textArea_1 = new JTextArea();
-		textArea_1.setEditable(false);
-		textArea_1.setLineWrap(true);
-		textArea_1.setRows(5);
-		textArea_1.setTabSize(0);
-		panel_2.add(textArea_1);
-		
-		JPanel panel_3 = new JPanel();
-		panel_1.add(panel_3);
-		panel_3.setLayout(new GridLayout(3, 2, 0, 0));
-		
-		JPanel panel_4 = new JPanel();
-		panel_3.add(panel_4);
-		panel_4.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-		
-		JLabel carNumber = new JLabel("차량번호");
-		carNumber.setHorizontalAlignment(SwingConstants.LEFT);
-		carNumber.setVerticalAlignment(SwingConstants.TOP);
-		panel_4.add(carNumber);
-		
-		carNum = new JTextField();
-		panel_4.add(carNum);
-		carNum.setHorizontalAlignment(SwingConstants.LEFT);
-		carNum.setColumns(10);
-		
-		JButton btnCarNumSearch = new JButton("SEARCH");
-		panel_4.add(btnCarNumSearch);
-		btnCarNumSearch.setHorizontalAlignment(SwingConstants.RIGHT);
-		
-		JPanel panel_5 = new JPanel();
-		panel_3.add(panel_5);
-		
-		JLabel label = new JLabel("전화번호");
-		label.setVerticalAlignment(SwingConstants.TOP);
-		label.setHorizontalAlignment(SwingConstants.LEFT);
-		panel_5.add(label);
-		
-		phoneNum = new JTextField();
-		phoneNum.setHorizontalAlignment(SwingConstants.LEFT);
-		phoneNum.setColumns(10);
-		panel_5.add(phoneNum);
-		
-		JButton btnPhoneNumSearch = new JButton("SEARCH");
-		btnPhoneNumSearch.setHorizontalAlignment(SwingConstants.RIGHT);
-		panel_5.add(btnPhoneNumSearch);
-	}
-
+		try {
+		     UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");  // This line gives Windows Theme
+		 
+		    } 
+		catch (Exception e) 
+		{
+		      e.printStackTrace();
+		    }
+		 
+		    JLabel label = new JLabel("Label");
+		    JTextField field = new JTextField("www.forgetcode.com!");
+		    JList list = new JList(new String[] { "A", "B", "C" });
+		    JScrollPane listPane = new JScrollPane(list);
+		    listPane.setPreferredSize(new Dimension(220, 100));
+		 
+		    JScrollPane treePane = new JScrollPane(new JTree());
+		    treePane.setPreferredSize(new Dimension(220, 100));
+		    JButton button = new JButton("Click me");
+		 
+		    JPanel cp = new JPanel();
+		    cp.add(label);
+		    cp.add(field);
+		    cp.add(listPane);
+		    cp.add(treePane);
+		    cp.add(button);
+		 
+		    JFrame frame = new JFrame();
+		    frame.setTitle("Windows Look and Feel Demo");
+		    frame.setPreferredSize(new Dimension(280, 300));
+		    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		    frame.setContentPane(cp);
+		    frame.pack();
+		    frame.setVisible(true);
+		 
+		  }
 }

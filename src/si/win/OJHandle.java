@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 public class OJHandle extends JFrame {
@@ -38,6 +39,7 @@ public class OJHandle extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 					OJHandle frame = new OJHandle();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -161,7 +163,7 @@ public class OJHandle extends JFrame {
 				itemVal.setText(setNumberFomat(numberText));
 				if(numberText.length() > 10)
 				{
-					showDialog();
+					showDialog(null, "상품금액 자릿수가 너무 많습니다.");
 				}
 				
 				if(kCode == 10)
@@ -233,14 +235,25 @@ public class OJHandle extends JFrame {
 	//계산하기
 	public void calculation()
 	{
-		int tVal = Integer.parseInt(getPureNumber(itemVal.getText()));
-		int bVal = Integer.parseInt(getPureNumber(ratio2.getText()));
-		int fVal = Integer.parseInt(getPureNumber(ratio1.getText()));
+		if(itemVal.getText().isEmpty() || ratio2.getText().isEmpty() || ratio1.getText().isEmpty())
+		{
+			showDialog(null, "계산가능한 금액을 입력해주세요");
+		} else {
+			int tVal = Integer.parseInt(getPureNumber(itemVal.getText()));
+			int bVal = Integer.parseInt(getPureNumber(ratio2.getText()));
+			int fVal = Integer.parseInt(getPureNumber(ratio1.getText()));
+			
+			if(fVal > tVal)
+			{
+				showDialog(null, "비율 금액보다 높은 아이템 가격을 입력해주세요.");
+			}
+			
+			long rtnVal = (tVal/fVal)*bVal;
+			System.out.println("(거래소금액 )"+tVal+" * (단가)"+bVal+" / (비율)"+fVal+" = (입금액 )"+rtnVal);
+			
+			rtnValue.setText(setNumberFomat(String.valueOf(rtnVal)));
+		}
 		
-		long rtnVal = (tVal/fVal)*bVal;
-		System.out.println("(거래소금액 )"+tVal+" * (단가)"+bVal+" / (비율)"+fVal+" = (입금액 )"+rtnVal);
-		
-		rtnValue.setText(setNumberFomat(String.valueOf(rtnVal)));
 	}
 	
 	//천단위구분기호
@@ -269,8 +282,11 @@ public class OJHandle extends JFrame {
 		return text.replaceAll("[^0-9]", "");
 	}
 	
-	public void showDialog()
+	public void showDialog(String title, String msg)
 	{
-		JOptionPane.showMessageDialog(null, "화면에 출력할 메세지", "제목", JOptionPane.WARNING_MESSAGE);
+		title = (title == null || title.isEmpty()) ? "경고" : title;
+		msg = (msg == null || msg.isEmpty()) ? "경고 메시지를 입력해주세요." : msg;
+		
+		JOptionPane.showMessageDialog(null, msg, title, JOptionPane.WARNING_MESSAGE);
 	}
 }
