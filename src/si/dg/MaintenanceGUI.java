@@ -1,33 +1,29 @@
 package si.dg;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.SystemColor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-
-import java.awt.SystemColor;
-import javax.swing.JProgressBar;
-import java.awt.Font;
-import java.awt.FlowLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JButton;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import java.awt.GridLayout;
-import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class MaintenanceGUI extends JFrame {
 
@@ -84,12 +80,11 @@ public class MaintenanceGUI extends JFrame {
 		contentPane.add(contentPanel, BorderLayout.NORTH);
 		
 		btn01 = new JButton("기본폴더열기");
-		
 		btn01.setFont(new Font("굴림", Font.PLAIN, 15));
 		btn02 = new JButton("백업폴더생성");
 		btn02.setFont(new Font("굴림", Font.PLAIN, 15));
 		contentPanel.setLayout(new GridLayout(10, 1, 0, 5));
-				
+		
 		contentPanel.add(btn01);
 		contentPanel.add(btn02);
 		

@@ -253,7 +253,6 @@ public class OJHandle extends JFrame {
 			
 			rtnValue.setText(setNumberFomat(String.valueOf(rtnVal)));
 		}
-		
 	}
 	
 	//천단위구분기호
