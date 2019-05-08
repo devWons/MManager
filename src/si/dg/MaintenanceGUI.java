@@ -37,6 +37,10 @@ public class MaintenanceGUI extends JFrame {
 	JButton btn01;
 	JButton btn02;
 	JScrollPane scrollPane;
+	private JButton btn03;
+	private JButton btn04;
+	private JButton btn05;
+	private JButton btn06;
 
 	/**
 	 * Launch the application.
@@ -87,6 +91,22 @@ public class MaintenanceGUI extends JFrame {
 		
 		contentPanel.add(btn01);
 		contentPanel.add(btn02);
+		
+		btn03 = new JButton("백업폴더생성03");
+		btn03.setFont(new Font("굴림", Font.PLAIN, 15));
+		contentPanel.add(btn03);
+		
+		btn04 = new JButton("백업폴더생성04");
+		btn04.setFont(new Font("굴림", Font.PLAIN, 15));
+		contentPanel.add(btn04);
+		
+		btn05 = new JButton("백업폴더생성05");
+		btn05.setFont(new Font("굴림", Font.PLAIN, 15));
+		contentPanel.add(btn05);
+		
+		btn06 = new JButton("백업폴더생성06");
+		btn06.setFont(new Font("굴림", Font.PLAIN, 15));
+		contentPanel.add(btn06);
 		
 		/*
 		 * 

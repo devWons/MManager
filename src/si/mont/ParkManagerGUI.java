@@ -15,6 +15,18 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.JTextArea;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollBar;
+
+import java.awt.Font;
+import java.awt.ScrollPane;
+import java.awt.Scrollbar;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ParkManagerGUI extends JFrame {
 
@@ -22,8 +34,12 @@ public class ParkManagerGUI extends JFrame {
 	private DefaultListModel<String> model;
 	
 	private String[] colHeader = {"입차시간","차량번호"};
-	private JTable table;
-	
+	JPanel contentPanel;
+	JScrollPane scrollPane;
+	JTextArea carList;
+	JButton btnRefresh;
+	JPanel btnPanel;
+	private JProgressBar progressBar;
 
 	/**
 	 * Launch the application.
@@ -33,59 +49,85 @@ public class ParkManagerGUI extends JFrame {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			ParkManagerGUI frame = new ParkManagerGUI();
 			frame.setVisible(true);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 	/**
 	 * Create the frame.
 	 */
 	public ParkManagerGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 238, 410);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JPanel btnPanel = new JPanel();
+		createBtnPanel();
+		createContentPanel();
+		
+	}
+	
+	private void createContentPanel()
+	{
+		contentPanel = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) contentPanel.getLayout();
+		contentPane.add(contentPanel, BorderLayout.WEST);
+		
+		carList = new JTextArea();
+		carList.setFont(new Font("Monospaced", Font.PLAIN, 24));
+		carList.setRows(9);
+		carList.setColumns(13);
+		carList.setEditable(false);
+		
+		scrollPane = new JScrollPane(carList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setAlignmentX(CENTER_ALIGNMENT);
+		
+		contentPanel.add(scrollPane);
+		
+		
+		StyledDocument doc = carList.StyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+
+		
+		
+		progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
+		progressBar.setValue(67);
+		progressBar.setFont(new Font("굴림", Font.PLAIN, 8));
+		contentPane.add(progressBar, BorderLayout.SOUTH);
+		
+		
+	}
+	/*
+	 * 버튼 패널 생성
+	 * */
+	public void createBtnPanel()
+	{
+		btnPanel = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) btnPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		contentPane.add(btnPanel, BorderLayout.NORTH);
 		
-		JButton button = new JButton("새로고침");
-		btnPanel.add(button);
-		
-		JLabel lblNewLabel = new JLabel("");
-		btnPanel.add(lblNewLabel);
-		
-		ArrayList<String> carListArr = getInputCarList();
-		
-		model = new DefaultListModel<String>();
-		for(String car : carListArr)
-		{
-			model.addElement(car);
-		}
-		JScrollPane scrollPane = new JScrollPane();
-		contentPane.add(scrollPane, BorderLayout.CENTER);
-		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-			},
-			new String[] {
-				"입차시간", "차량번호", "주차시간"
+		btnRefresh = new JButton("새로고침");
+		btnRefresh.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				getInputCarList();
 			}
-		));
-		contentPane.add(table, BorderLayout.SOUTH);
-		
+		});
+		btnPanel.add(btnRefresh);
 	}
+	
+	
 
 	/*
 	 * 입차된 차량 리스트를 가져온다.
 	 * */
-	private ArrayList<String> getInputCarList() {
+	private void getInputCarList() {
 		ArrayList<String> listArr = new ArrayList<String>();
 		listArr.add("39너7444");
 		listArr.add("28도7174");
@@ -104,7 +146,18 @@ public class ParkManagerGUI extends JFrame {
 		listArr.add("30도0715");
 		listArr.add("52노7579");
 		listArr.add("27나9139");
-		return listArr;
+		
+		try {
+			for(String carNum : listArr)
+			{
+				carList.append(carNum+"\n");
+				carList.setCaretPosition(carList.getDocument().getLength());
+				carList.setAlignmentX(CENTER_ALIGNMENT);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
