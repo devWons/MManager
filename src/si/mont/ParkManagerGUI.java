@@ -18,6 +18,13 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.Connection.Response;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 import javax.swing.JTextArea;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollBar;
@@ -30,16 +37,13 @@ import java.awt.event.ActionEvent;
 
 public class ParkManagerGUI extends JFrame {
 
-	private JPanel contentPane;
-	private DefaultListModel<String> model;
-	
-	private String[] colHeader = {"입차시간","차량번호"};
+	JPanel contentPane;
 	JPanel contentPanel;
 	JScrollPane scrollPane;
 	JTextArea carList;
 	JButton btnRefresh;
 	JPanel btnPanel;
-	private JProgressBar progressBar;
+	JProgressBar progressBar;
 
 	/**
 	 * Launch the application.
@@ -73,7 +77,6 @@ public class ParkManagerGUI extends JFrame {
 	private void createContentPanel()
 	{
 		contentPanel = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) contentPanel.getLayout();
 		contentPane.add(contentPanel, BorderLayout.WEST);
 		
 		carList = new JTextArea();
@@ -87,22 +90,13 @@ public class ParkManagerGUI extends JFrame {
 		
 		contentPanel.add(scrollPane);
 		
-		
-		StyledDocument doc = carList.StyledDocument();
-		SimpleAttributeSet center = new SimpleAttributeSet();
-		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
-		doc.setParagraphAttributes(0, doc.getLength(), center, false);
-
-		
-		
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
 		progressBar.setValue(67);
 		progressBar.setFont(new Font("굴림", Font.PLAIN, 8));
 		contentPane.add(progressBar, BorderLayout.SOUTH);
-		
-		
 	}
+
 	/*
 	 * 버튼 패널 생성
 	 * */
@@ -129,30 +123,54 @@ public class ParkManagerGUI extends JFrame {
 	 * */
 	private void getInputCarList() {
 		ArrayList<String> listArr = new ArrayList<String>();
-		listArr.add("39너7444");
-		listArr.add("28도7174");
-		listArr.add("65누3085");
-		listArr.add("30도0715");
-		listArr.add("52노7579");
-		listArr.add("27나9139");
-		listArr.add("20마2140");
-		listArr.add("52저6877");
-		listArr.add("26러9756");
-		listArr.add("06어5236");
-		listArr.add("33구0917");
-		listArr.add("39너7444");
-		listArr.add("28도7174");
-		listArr.add("65누3085");
-		listArr.add("30도0715");
-		listArr.add("52노7579");
-		listArr.add("27나9139");
-		
 		try {
+			
+			listArr.add("39너7444");
+			listArr.add("28도7174");
+			listArr.add("65누3085");
+			listArr.add("30도0715");
+			listArr.add("52노7579");
+			listArr.add("27나9139");
+			listArr.add("20마2140");
+			listArr.add("52저6877");
+			listArr.add("26러9756");
+			listArr.add("06어5236");
+			listArr.add("33구0917");
+			listArr.add("39너7444");
+			listArr.add("28도7174");
+			listArr.add("65누3085");
+			listArr.add("30도0715");
+			listArr.add("52노7579");
+			listArr.add("27나9139");
+			
+			Response loginForm = Jsoup.connect("http://ygsquare1.iptime.org/index.php/login")
+					.method(Connection.Method.GET)
+					.execute();
+	
+			Connection.Response evaluationPage = Jsoup.connect("http://ygsquare1.iptime.org/index.php/main/ajax_CarList/")
+					.cookies(loginForm.cookies())
+					.data("is_ajax", "1")
+					.method(Connection.Method.POST)
+					.timeout(5000)
+					.execute();
+	
+			Document doc = evaluationPage.parse();
+			
+			ArrayList<String> carNumList = new ArrayList<String>();
+			
+			for(Element elFont : doc.select("font"))
+			{
+				carNumList.add(elFont.text());
+			}
+			
+			
+			
+			
+		
 			for(String carNum : listArr)
 			{
-				carList.append(carNum+"\n");
+				carList.append("\n"+carNum);
 				carList.setCaretPosition(carList.getDocument().getLength());
-				carList.setAlignmentX(CENTER_ALIGNMENT);
 			}
 			
 		} catch (Exception e) {
