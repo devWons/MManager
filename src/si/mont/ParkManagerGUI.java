@@ -124,25 +124,6 @@ public class ParkManagerGUI extends JFrame {
 	private void getInputCarList() {
 		ArrayList<String> listArr = new ArrayList<String>();
 		try {
-			
-			listArr.add("39너7444");
-			listArr.add("28도7174");
-			listArr.add("65누3085");
-			listArr.add("30도0715");
-			listArr.add("52노7579");
-			listArr.add("27나9139");
-			listArr.add("20마2140");
-			listArr.add("52저6877");
-			listArr.add("26러9756");
-			listArr.add("06어5236");
-			listArr.add("33구0917");
-			listArr.add("39너7444");
-			listArr.add("28도7174");
-			listArr.add("65누3085");
-			listArr.add("30도0715");
-			listArr.add("52노7579");
-			listArr.add("27나9139");
-			
 			Response loginForm = Jsoup.connect("http://ygsquare1.iptime.org/index.php/login")
 					.method(Connection.Method.GET)
 					.execute();
@@ -156,23 +137,12 @@ public class ParkManagerGUI extends JFrame {
 	
 			Document doc = evaluationPage.parse();
 			
-			ArrayList<String> carNumList = new ArrayList<String>();
-			
 			for(Element elFont : doc.select("font"))
 			{
-				carNumList.add(elFont.text());
-			}
-			
-			
-			
-			
-		
-			for(String carNum : listArr)
-			{
-				carList.append("\n"+carNum);
+				carList.append("\n"+elFont.text());
 				carList.setCaretPosition(carList.getDocument().getLength());
 			}
-			
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

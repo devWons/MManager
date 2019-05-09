@@ -96,9 +96,9 @@ public class ParkingManager {
 
 			Document doc = evaluationPage.parse();
 			
-			System.out.println("----------------doc------------------");
-			System.out.println(doc);
-			System.out.println("----------------//doc------------------");
+//			System.out.println("----------------doc------------------");
+//			System.out.println(doc);
+//			System.out.println("----------------//doc------------------");
 			
 			ArrayList<String> carNumList = new ArrayList<String>();
 			
@@ -107,6 +107,8 @@ public class ParkingManager {
 //				System.out.println(elFont.text());
 				carNumList.add(elFont.text());
 			}
+			System.out.println("----------------doc------------------");
+			System.out.println(carNumList);
 			
 //			 <a onclick="fnCarInfo('26모5466', '2019-04-26 19:54:34', '0 시간 14 분 ', '0011019042619543490101');"><font color="white">26모5466</font></a> 
 //			  <a onclick="fnCarInfo('20마2089', '2019-04-26 19:55:40', '0 시간 13 분 ', '0011019042619554113501');"><font color="white">20마2089</font></a> 
