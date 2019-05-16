@@ -2,40 +2,36 @@ package si.mont;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.StringReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import org.jsoup.Connection.Response;
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import javax.swing.JTextArea;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollBar;
-
-import java.awt.Font;
-import java.awt.ScrollPane;
-import java.awt.Scrollbar;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ParkManagerGUI extends JFrame {
+	Date dt = new Date();
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat nowTime = new SimpleDateFormat("yyyy-MM-dd");
+	String today = sdf.format(dt);
 
 	JPanel contentPane;
 	JPanel contentPanel;
@@ -44,6 +40,7 @@ public class ParkManagerGUI extends JFrame {
 	JButton btnRefresh;
 	JPanel btnPanel;
 	JProgressBar progressBar;
+	
 
 	/**
 	 * Launch the application.
@@ -53,6 +50,35 @@ public class ParkManagerGUI extends JFrame {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			ParkManagerGUI frame = new ParkManagerGUI();
 			frame.setVisible(true);
+			
+			int sleep = 20; //1분
+			// 시간 출력 포맷
+	        final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
+	        // 주기적인 작업을 위한
+	        final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+
+
+	        exec.scheduleAtFixedRate(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						System.err.println("-----------------    Auto START!!    ------------------------------------------------------- ");
+						Calendar cal = Calendar.getInstance() ;
+						System.out.println(fmt.format(cal.getTime())) ;
+						long start = System.currentTimeMillis(); //시작하는 시점 계산
+						
+						frame.getInputCarList();
+						
+						long end = System.currentTimeMillis(); //프로그램이 끝나는 시점 계산
+						System.out.println( "실행 시간 : " + ( end - start )/1000.0 +"초");
+						
+						System.err.println("-----------------    Auto END!!      ------------------------------------------------------- ");
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}, 0, sleep, TimeUnit.MINUTES);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,6 +136,8 @@ public class ParkManagerGUI extends JFrame {
 		btnRefresh = new JButton("새로고침");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				long start = System.currentTimeMillis();
+				System.err.println("------    "+start+"    -------    Manual START!!    ------------------------------------------------------- ");
 				getInputCarList();
 			}
 		});
@@ -119,10 +147,9 @@ public class ParkManagerGUI extends JFrame {
 	
 
 	/*
-	 * 입차된 차량 리스트를 가져온다.
+	 * 당일자 입차된 차량 리스트를 가져온다.
 	 * */
 	private void getInputCarList() {
-		ArrayList<String> listArr = new ArrayList<String>();
 		try {
 			Response loginForm = Jsoup.connect("http://ygsquare1.iptime.org/index.php/login")
 					.method(Connection.Method.GET)
@@ -137,11 +164,29 @@ public class ParkManagerGUI extends JFrame {
 	
 			Document doc = evaluationPage.parse();
 			
-			for(Element elFont : doc.select("font"))
-			{
-				carList.append("\n"+elFont.text());
-				carList.setCaretPosition(carList.getDocument().getLength());
-			}
+			String str = doc.select("a").outerHtml();
+			
+			String read = null;
+			String lineInfo = null;
+			String tmpToday = null;
+			String[] tmpArr = null;
+			
+			BufferedReader reader = new BufferedReader(new StringReader(str));
+			reader.readLine();
+			
+			while((read = reader.readLine()) != null){
+				read = read.replaceAll("'", ""); //" ' " 기호 Replace
+				tmpArr = read.substring(read.indexOf("(")+1, read.lastIndexOf(")")).split(","); //괄호 안에 내용을 콤마(,) 기준으로 Split
+				
+				tmpToday = tmpArr[1].trim().substring(0, 10);
+				
+				if(today.matches(tmpToday))
+				{
+					carList.append("\n"+tmpArr[0]);
+					carList.setCaretPosition(carList.getDocument().getLength());
+				}
+                lineInfo = null;
+            }
 		
 		} catch (Exception e) {
 			e.printStackTrace();

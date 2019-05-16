@@ -86,6 +86,7 @@ public class ParkingManager {
 			
 			Map<String, String> cookies = loginPage.cookies();
 			
+//			http://ygsquare1.iptime.org/report/ajax_DisList?frDate=2019-05-10&frTime=00:00&toDate=2019-05-10&toTime=23:00&carNo=&selMode=0			
 			Connection.Response evaluationPage = Jsoup.connect("http://ygsquare1.iptime.org/index.php/main/ajax_CarList/")
 					.cookies(cookies)
 					.data("is_ajax", "1")
@@ -96,19 +97,19 @@ public class ParkingManager {
 
 			Document doc = evaluationPage.parse();
 			
-//			System.out.println("----------------doc------------------");
-//			System.out.println(doc);
-//			System.out.println("----------------//doc------------------");
+			System.out.println("----------------doc------------------");
+			System.out.println(doc);
+			System.out.println("----------------//doc------------------");
 			
 			ArrayList<String> carNumList = new ArrayList<String>();
 			
-			for(Element elFont : doc.select("font"))
+			for(Element elFont : doc.select("a"))
 			{
 //				System.out.println(elFont.text());
 				carNumList.add(elFont.text());
 			}
-			System.out.println("----------------doc------------------");
-			System.out.println(carNumList);
+//			System.out.println("----------------doc------------------");
+//			System.out.println(carNumList);
 			
 //			 <a onclick="fnCarInfo('26모5466', '2019-04-26 19:54:34', '0 시간 14 분 ', '0011019042619543490101');"><font color="white">26모5466</font></a> 
 //			  <a onclick="fnCarInfo('20마2089', '2019-04-26 19:55:40', '0 시간 13 분 ', '0011019042619554113501');"><font color="white">20마2089</font></a> 
