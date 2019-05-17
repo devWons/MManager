@@ -30,7 +30,7 @@ import org.jsoup.nodes.Document;
 public class ParkManagerGUI extends JFrame {
 	Date dt = new Date();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	SimpleDateFormat nowTime = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat nowTime = new SimpleDateFormat("HH");
 	String today = sdf.format(dt);
 
 	JPanel contentPane;
@@ -50,12 +50,13 @@ public class ParkManagerGUI extends JFrame {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			ParkManagerGUI frame = new ParkManagerGUI();
 			frame.setVisible(true);
-			
-			int sleep = 20; //1분
+			int progressbarSleep = 15; //15초
+			int sleep = 20; //20분
+			int currentSleepTime = 0;
 			// 시간 출력 포맷
 	        final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
 	        // 주기적인 작업을 위한
-	        final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+	        final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(2);
 
 
 	        exec.scheduleAtFixedRate(new Runnable() {
@@ -79,6 +80,22 @@ public class ParkManagerGUI extends JFrame {
 					}
 				}
 			}, 0, sleep, TimeUnit.MINUTES);
+
+	        exec.scheduleAtFixedRate(new Runnable() {
+	        	
+	        	@Override
+	        	public void run() {
+	        		try {
+	        			Calendar cal2 = Calendar.getInstance() ;
+	        			System.out.println(fmt.format(cal2.getTime())) ;
+	        			
+	        			int maxPers = 1200;
+	        			
+	        		} catch (Exception e) {
+	        			e.printStackTrace();
+	        		}
+	        	}
+	        }, 0, progressbarSleep, TimeUnit.SECONDS);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -118,7 +135,7 @@ public class ParkManagerGUI extends JFrame {
 		
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-		progressBar.setValue(67);
+		progressBar.setValue(0);
 		progressBar.setFont(new Font("굴림", Font.PLAIN, 8));
 		contentPane.add(progressBar, BorderLayout.SOUTH);
 	}
