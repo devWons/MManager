@@ -30,7 +30,7 @@ import org.jsoup.nodes.Document;
 public class ParkManagerGUI extends JFrame {
 	Date dt = new Date();
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-	SimpleDateFormat nowTime = new SimpleDateFormat("HH");
+    static SimpleDateFormat nowTime = new SimpleDateFormat("HH:mm:ss");
 	String today = sdf.format(dt);
 
 	JPanel contentPane;
@@ -39,37 +39,41 @@ public class ParkManagerGUI extends JFrame {
 	JTextArea carList;
 	JButton btnRefresh;
 	JPanel btnPanel;
-	JProgressBar progressBar;
+	static JProgressBar progressBar;
+	
+	/*****************    환경설정     *****************************************************************************/
+	static int progressbarSleep = 15; //프로그레스바 갱신주기. 반드시 초단위임
+	static int sleep = 20; //일정한 간격으로 실행될 쓰레드 시간. 반드시 분 단위임
+	static int maxPers = sleep*60; // 프로그레스바 100%일때 
+	static int currentSleepTime = 0;
+	
 	
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		int progressbarSleep = 15; //프로그레스바 갱신주기. 반드시 초단위임
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 			ParkManagerGUI frame = new ParkManagerGUI();
 			frame.setVisible(true);
-			int progressbarSleep = 15; //15초
-			int sleep = 20; //20분
-			int currentSleepTime = 0;
-			// 시간 출력 포맷
-	        final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
+			
 	        // 주기적인 작업을 위한
 	        final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(2);
 
 
 	        exec.scheduleAtFixedRate(new Runnable() {
-				
 				@Override
 				public void run() {
 					try {
 						System.err.println("-----------------    Auto START!!    ------------------------------------------------------- ");
 						Calendar cal = Calendar.getInstance() ;
-						System.out.println(fmt.format(cal.getTime())) ;
+						System.out.println(nowTime.format(cal.getTime())) ;
 						long start = System.currentTimeMillis(); //시작하는 시점 계산
 						
-						frame.getInputCarList();
+//						frame.getInputCarList();
+						System.out.println("목록 갱신!!!!");
 						
 						long end = System.currentTimeMillis(); //프로그램이 끝나는 시점 계산
 						System.out.println( "실행 시간 : " + ( end - start )/1000.0 +"초");
@@ -81,16 +85,23 @@ public class ParkManagerGUI extends JFrame {
 				}
 			}, 0, sleep, TimeUnit.MINUTES);
 
+	        
 	        exec.scheduleAtFixedRate(new Runnable() {
-	        	
 	        	@Override
 	        	public void run() {
 	        		try {
 	        			Calendar cal2 = Calendar.getInstance() ;
-	        			System.out.println(fmt.format(cal2.getTime())) ;
+	        			currentSleepTime = currentSleepTime/maxPers*100;
+
+	        			System.out.println(currentSleepTime+"초 - 프로그레스바 마지막 갱신 : "+nowTime.format(cal2.getTime()));
+	        			progressBar.setValue(currentSleepTime);
 	        			
-	        			int maxPers = 1200;
-	        			
+	        			if(currentSleepTime == maxPers)
+	        			{
+	        				currentSleepTime = 0;
+	        			} else {
+	        				currentSleepTime = currentSleepTime + progressbarSleep;
+	        			}
 	        		} catch (Exception e) {
 	        			e.printStackTrace();
 	        		}
@@ -135,7 +146,6 @@ public class ParkManagerGUI extends JFrame {
 		
 		progressBar = new JProgressBar();
 		progressBar.setStringPainted(true);
-		progressBar.setValue(0);
 		progressBar.setFont(new Font("굴림", Font.PLAIN, 8));
 		contentPane.add(progressBar, BorderLayout.SOUTH);
 	}
