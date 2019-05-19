@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
@@ -26,6 +27,7 @@ import org.jsoup.Connection;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import javax.swing.JLabel;
 
 public class ParkManagerGUI extends JFrame {
 	Date dt = new Date();
@@ -40,13 +42,14 @@ public class ParkManagerGUI extends JFrame {
 	JButton btnRefresh;
 	JPanel btnPanel;
 	static JProgressBar progressBar;
+	JLabel jTotalCnt;
 	
 	/*****************    환경설정     *****************************************************************************/
 	static int progressbarSleep = 15; //프로그레스바 갱신주기. 반드시 초단위임
 	static int sleep = 20; //일정한 간격으로 실행될 쓰레드 시간. 반드시 분 단위임
 	static int maxPers = sleep*60; // 프로그레스바 100%일때 
 	static int currentSleepTime = 0;
-	
+	static int cst = 0;
 	
 
 	/**
@@ -67,47 +70,49 @@ public class ParkManagerGUI extends JFrame {
 				@Override
 				public void run() {
 					try {
-						System.err.println("-----------------    Auto START!!    ------------------------------------------------------- ");
-						Calendar cal = Calendar.getInstance() ;
-						System.out.println(nowTime.format(cal.getTime())) ;
+						System.err.println("---------    Auto START    ------------------------------------------------------- ");
+						Calendar cal = Calendar.getInstance();
+						System.out.println("Auto 실행시간 - "+nowTime.format(cal.getTime())) ;
 						long start = System.currentTimeMillis(); //시작하는 시점 계산
 						
-//						frame.getInputCarList();
-						System.out.println("목록 갱신!!!!");
+						frame.getInputCarList();
 						
 						long end = System.currentTimeMillis(); //프로그램이 끝나는 시점 계산
-						System.out.println( "실행 시간 : " + ( end - start )/1000.0 +"초");
 						
-						System.err.println("-----------------    Auto END!!      ------------------------------------------------------- ");
+						System.err.println("---------    Auto END (실행시간 : " + ( end - start )/1000.0 +"초)    ----------------------------------------- ");
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 			}, 0, sleep, TimeUnit.MINUTES);
-
-	        
+/*
 	        exec.scheduleAtFixedRate(new Runnable() {
 	        	@Override
 	        	public void run() {
 	        		try {
 	        			Calendar cal2 = Calendar.getInstance() ;
-	        			currentSleepTime = currentSleepTime/maxPers*100;
-
-	        			System.out.println(currentSleepTime+"초 - 프로그레스바 마지막 갱신 : "+nowTime.format(cal2.getTime()));
-	        			progressBar.setValue(currentSleepTime);
 	        			
-	        			if(currentSleepTime == maxPers)
+//	        			currentSleepTime = currentSleepTime/maxPers*100;
+	        			cst = cst/maxPers*100;
+	        			System.out.println("1 : "+ cst);
+
+//	        			System.out.println(currentSleepTime+"초 - 프로그레스바 마지막 갱신 : "+nowTime.format(cal2.getTime()));
+//	        			System.out.println(cst+"초 - 프로그레스바 마지막 갱신 : "+nowTime.format(cal2.getTime()));
+	        			progressBar.setValue(cst);
+	        			
+	        			if(cst >= maxPers)
 	        			{
-	        				currentSleepTime = 0;
+	        				cst = 0;
 	        			} else {
-	        				currentSleepTime = currentSleepTime + progressbarSleep;
+	        				cst = cst + progressbarSleep;
 	        			}
+	        			System.out.println("cst : "+cst);
 	        		} catch (Exception e) {
 	        			e.printStackTrace();
 	        		}
 	        	}
 	        }, 0, progressbarSleep, TimeUnit.SECONDS);
-			
+*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -117,7 +122,7 @@ public class ParkManagerGUI extends JFrame {
 	 */
 	public ParkManagerGUI() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 238, 410);
+		setBounds(100, 100, 230, 410);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -131,16 +136,16 @@ public class ParkManagerGUI extends JFrame {
 	private void createContentPanel()
 	{
 		contentPanel = new JPanel();
-		contentPane.add(contentPanel, BorderLayout.WEST);
+		contentPane.add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 		
 		carList = new JTextArea();
 		carList.setFont(new Font("Monospaced", Font.PLAIN, 24));
-		carList.setRows(9);
-		carList.setColumns(13);
+		carList.setRows(8);
+		carList.setColumns(14);
 		carList.setEditable(false);
 		
-		scrollPane = new JScrollPane(carList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setAlignmentX(CENTER_ALIGNMENT);
+		scrollPane = new JScrollPane(carList, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		contentPanel.add(scrollPane);
 		
@@ -156,19 +161,23 @@ public class ParkManagerGUI extends JFrame {
 	public void createBtnPanel()
 	{
 		btnPanel = new JPanel();
+		jTotalCnt = new JLabel("현재 : 0  건");
 		FlowLayout flowLayout = (FlowLayout) btnPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
-		contentPane.add(btnPanel, BorderLayout.NORTH);
+		btnPanel.add(jTotalCnt);
 		
 		btnRefresh = new JButton("새로고침");
 		btnRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				long start = System.currentTimeMillis();
-				System.err.println("------    "+start+"    -------    Manual START!!    ------------------------------------------------------- ");
+				Calendar start = Calendar.getInstance();
+				System.err.println("-    "+nowTime.format(start.getTime())+"    새로고침 버튼 클릭!!    -------------------------------------------------");
 				getInputCarList();
 			}
 		});
+		
 		btnPanel.add(btnRefresh);
+		
+		contentPane.add(btnPanel, BorderLayout.NORTH);
 	}
 	
 	
@@ -197,6 +206,7 @@ public class ParkManagerGUI extends JFrame {
 			String lineInfo = null;
 			String tmpToday = null;
 			String[] tmpArr = null;
+			int totalCnt = 0; //오늘 출입한 차량 건수 
 			
 			BufferedReader reader = new BufferedReader(new StringReader(str));
 			reader.readLine();
@@ -209,12 +219,14 @@ public class ParkManagerGUI extends JFrame {
 				
 				if(today.matches(tmpToday))
 				{
+					totalCnt++; //차량수 증가
 					carList.append("\n"+tmpArr[0]);
 					carList.setCaretPosition(carList.getDocument().getLength());
 				}
                 lineInfo = null;
             }
 		
+			jTotalCnt.setText("현재 : "+totalCnt+" 건");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
