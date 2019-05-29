@@ -28,6 +28,7 @@ import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class ParkManagerGUI extends JFrame {
 	Date dt = new Date();
@@ -121,6 +122,7 @@ public class ParkManagerGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public ParkManagerGUI() {
+		setTitle("v.1.0.0");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 230, 410);
 		contentPane = new JPanel();
@@ -162,6 +164,7 @@ public class ParkManagerGUI extends JFrame {
 	{
 		btnPanel = new JPanel();
 		jTotalCnt = new JLabel("현재 : 0  건");
+		jTotalCnt.setFont(new Font("굴림", Font.BOLD, 15));
 		FlowLayout flowLayout = (FlowLayout) btnPanel.getLayout();
 		flowLayout.setAlignment(FlowLayout.RIGHT);
 		btnPanel.add(jTotalCnt);
@@ -210,6 +213,8 @@ public class ParkManagerGUI extends JFrame {
 			
 			BufferedReader reader = new BufferedReader(new StringReader(str));
 			reader.readLine();
+			
+			carList.setText("");
 			
 			while((read = reader.readLine()) != null){
 				read = read.replaceAll("'", ""); //" ' " 기호 Replace
