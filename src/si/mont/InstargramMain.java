@@ -15,9 +15,14 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.Connection.Response;
 
-public class MontMain {
-
+public class InstargramMain {
+	public static final String CLIENT_ID = "e5f6da8c60054e368309bcb7453ade86";
+	public static final String REDIRECT_URI = "http://skswodnjs02.cafe24.com/mblk/mblkMain.php";
+	
 	public static void main(String[] args) throws ClientProtocolException, IOException {
 		CloseableHttpClient httpClient = HttpClients.createDefault();
 		try {
@@ -30,11 +35,20 @@ public class MontMain {
 			} finally {
 				getResponse.close();
 			}
+//			String url = "https://api.instagram.com/oauth/authorize/?client_id="+CLIENT_ID+"&redirect_uri="+REDIRECT_URI+"&response_type=token";
+//			System.out.println("로그인url: "+ url);
+//			
+//			Response loginForm = Jsoup.connect(url)
+//					.method(Connection.Method.GET)
+//					.execute();
+//			
+//			System.out.println("로그인한 후 쿠키값 : "+ loginForm.cookies());
 
-			HttpPost httpPost = new HttpPost("http://ygsquare1.iptime.org/index.php/login");
+			HttpPost httpPost = new HttpPost("https://api.instagram.com/oauth/authorize/");
 			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-			nvps.add(new BasicNameValuePair("login_id", "yk306"));
-			nvps.add(new BasicNameValuePair("login_pw", "1"));
+			nvps.add(new BasicNameValuePair("client_id", CLIENT_ID));
+			nvps.add(new BasicNameValuePair("redirect_uri", REDIRECT_URI));
+			nvps.add(new BasicNameValuePair("response_type", "token"));
 			httpPost.setEntity(new UrlEncodedFormEntity(nvps));
 			CloseableHttpResponse postResponse = httpClient.execute(httpPost);
 			try {

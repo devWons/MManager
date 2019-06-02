@@ -103,10 +103,8 @@ public class Mmain {
 		 * 1. 제외할 수를 입력하세요.
 		 **********************************************/
 		String[] exNum = {
-				"1","2","3","4","5","6",
-				"7","8","9","10","11","12",
-				"7","8","9","10","11","12",
-				"13","14","15","16","17","18"
+				"1","2","3","10","11","12",
+				"23","24","35","36","17","29"
 				};
 		List<Integer> nExList = ExceptNumber(exNum);
 		
@@ -114,8 +112,8 @@ public class Mmain {
 		 * 2. 예상 당첨번호 생성
 		 * 3. 번호의 합이 예상 당첨 구간인지 확인
 		 **********************************************/
-		int sMin = 160;
-		int sMax = 200;
+		int sMin = 130;
+		int sMax = 140;
 		List<Integer> lNum = null;
 		ArrayList<String> arrNumList = new ArrayList<>();
 		Boolean exit = true;
@@ -138,6 +136,14 @@ public class Mmain {
 				}
 			}
 		}
+		// 6 10 16 28 34 38
+		List<Integer> win = new LinkedList<Integer>();
+		win.add(6);
+		win.add(10);
+		win.add(16);
+		win.add(28);
+		win.add(34);
+		win.add(38);
 		
 		
         /**********************************************
